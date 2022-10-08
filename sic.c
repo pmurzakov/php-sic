@@ -1,18 +1,21 @@
 /*
   +----------------------------------------------------------------------+
-  | PHP Version 7                                                        |
+  | Copyright (c) 2018-2022 Bumble Inc.                                  |
+  +----------------------------------------------------------------------+    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
   +----------------------------------------------------------------------+
-  | Copyright (c) 1997-2018 The PHP Group                                |
-  +----------------------------------------------------------------------+
-  | This source file is subject to version 3.01 of the PHP license,      |
-  | that is bundled with this package in the file LICENSE, and is        |
-  | available through the world-wide-web at the following url:           |
-  | http://www.php.net/license/3_01.txt                                  |
-  | If you did not receive a copy of the PHP license and are unable to   |
-  | obtain it through the world-wide-web, please send a note to          |
-  | license@php.net so we can mail you a copy immediately.               |
-  +----------------------------------------------------------------------+
-  | Author:                                                              |
+  | Author: Antony Dovgal <tony@team.bumble.com>                         |
   +----------------------------------------------------------------------+
 */
 
@@ -691,9 +694,12 @@ PHP_FUNCTION(sic_set)
 	zend_long val;
 	zend_long ttl = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "sl|l", &key, &key_len, &val, &ttl) == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_START(2, 3)
+		Z_PARAM_STRING(key, key_len)
+		Z_PARAM_LONG(val)
+		Z_PARAM_OPTIONAL
+		Z_PARAM_LONG(ttl)
+	ZEND_PARSE_PARAMETERS_END();
 
 	if (!si_cache.shard_num) {
 		php_error_docref(NULL, E_WARNING, "sic is not enabled");
@@ -717,9 +723,12 @@ PHP_FUNCTION(sic_add)
 	zend_long val;
 	zend_long ttl = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "sl|l", &key, &key_len, &val, &ttl) == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_START(2, 3)
+		Z_PARAM_STRING(key, key_len)
+		Z_PARAM_LONG(val)
+		Z_PARAM_OPTIONAL
+		Z_PARAM_LONG(ttl)
+	ZEND_PARSE_PARAMETERS_END();
 
 	if (!si_cache.shard_num) {
 		php_error_docref(NULL, E_WARNING, "sic is not enabled");
@@ -741,9 +750,9 @@ PHP_FUNCTION(sic_del)
 	char *key;
 	size_t key_len;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &key, &key_len) == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_START(1, 1)
+		Z_PARAM_STRING(key, key_len)
+	ZEND_PARSE_PARAMETERS_END();
 
 	if (!si_cache.shard_num) {
 		php_error_docref(NULL, E_WARNING, "sic is not enabled");
@@ -766,9 +775,9 @@ PHP_FUNCTION(sic_get)
 	size_t key_len;
 	zend_long val;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &key, &key_len) == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_START(1, 1)
+		Z_PARAM_STRING(key, key_len)
+	ZEND_PARSE_PARAMETERS_END();
 
 	if (!si_cache.shard_num) {
 		php_error_docref(NULL, E_WARNING, "sic is not enabled");
@@ -791,9 +800,9 @@ PHP_FUNCTION(sic_exists)
 	size_t key_len;
 	zend_long val;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &key, &key_len) == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_START(1, 1)
+		Z_PARAM_STRING(key, key_len)
+	ZEND_PARSE_PARAMETERS_END();
 
 	if (!si_cache.shard_num) {
 		php_error_docref(NULL, E_WARNING, "sic is not enabled");
@@ -818,9 +827,12 @@ PHP_FUNCTION(sic_inc)
 	zend_long inc_val = 1, val;
 	zend_long ttl = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s|ll", &key, &key_len, &inc_val, &ttl) == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_START(1, 3)
+		Z_PARAM_STRING(key, key_len)
+		Z_PARAM_OPTIONAL
+		Z_PARAM_LONG(inc_val)
+		Z_PARAM_LONG(ttl)
+	ZEND_PARSE_PARAMETERS_END();
 
 	if (!si_cache.shard_num) {
 		php_error_docref(NULL, E_WARNING, "sic is not enabled");
@@ -845,9 +857,12 @@ PHP_FUNCTION(sic_dec)
 	zend_long dec_val = 1, val;
 	zend_long ttl = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s|ll", &key, &key_len, &dec_val, &ttl) == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_START(1, 3)
+		Z_PARAM_STRING(key, key_len)
+		Z_PARAM_OPTIONAL
+		Z_PARAM_LONG(dec_val)
+		Z_PARAM_LONG(ttl)
+	ZEND_PARSE_PARAMETERS_END();
 
 	if (!si_cache.shard_num) {
 		php_error_docref(NULL, E_WARNING, "sic is not enabled");
@@ -870,9 +885,11 @@ PHP_FUNCTION(sic_cas)
 	size_t key_len;
 	zend_long old_val, new_val;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "sll", &key, &key_len, &old_val, &new_val) == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_START(3, 3)
+		Z_PARAM_STRING(key, key_len)
+		Z_PARAM_LONG(old_val)
+		Z_PARAM_LONG(new_val)
+	ZEND_PARSE_PARAMETERS_END();
 
 	if (!si_cache.shard_num) {
 		php_error_docref(NULL, E_WARNING, "sic is not enabled");
@@ -891,10 +908,8 @@ PHP_FUNCTION(sic_cas)
 */
 PHP_FUNCTION(sic_gc)
 {
-
-	if (zend_parse_parameters_none() == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_START(0, 0)
+	ZEND_PARSE_PARAMETERS_END();
 
 	if (!si_cache.shard_num) {
 		php_error_docref(NULL, E_WARNING, "sic is not enabled");
@@ -914,9 +929,8 @@ PHP_FUNCTION(sic_gc)
 */
 PHP_FUNCTION(sic_info)
 {
-	if (zend_parse_parameters_none() == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_START(0, 0)
+	ZEND_PARSE_PARAMETERS_END();
 
 	if (!si_cache.shard_num) {
 		php_error_docref(NULL, E_WARNING, "sic is not enabled");
